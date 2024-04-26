@@ -1590,6 +1590,14 @@ public abstract class GeneratedMessageLite<
   static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(
       T instance, CodedInputStream input, ExtensionRegistryLite extensionRegistry)
       throws InvalidProtocolBufferException {
+    try {
+      if (input.isAtEnd()) {
+        return instance;
+      }
+    } catch (IOException e) {
+      throw new InvalidProtocolBufferException(e)
+          .setUnfinishedMessage(instance.newMutableInstance());
+    }
     @SuppressWarnings("unchecked") // Guaranteed by protoc
     T result = instance.newMutableInstance();
     try {
@@ -1623,6 +1631,9 @@ public abstract class GeneratedMessageLite<
   private static <T extends GeneratedMessageLite<T, ?>> T parsePartialFrom(
       T instance, byte[] input, int offset, int length, ExtensionRegistryLite extensionRegistry)
       throws InvalidProtocolBufferException {
+    if (length == 0) {
+      return instance;
+    }
     @SuppressWarnings("unchecked") // Guaranteed by protoc
     T result = instance.newMutableInstance();
     try {
